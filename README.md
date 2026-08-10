@@ -42,3 +42,5 @@ Built from three raw CSV exports (`Patients.csv`, `Doctors.csv`, `Admissions.csv
 
 1. Open `hospital.db` in DB Browser for SQLite to explore tables directly, or
 2. Open `hospital_analytics.ipynb` in VS Code / Jupyter, ensure `hospital.db` is in the same folder, and run cells top to bottom.
+
+Here, is a step by step guide is available. 
