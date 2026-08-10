@@ -1,12 +1,12 @@
 # SQL-Based Healthcare Analytics & AI Pipeline
 
-Querying a local SQLite hospital database with SQL, exploring patient data, identifying clinical trends, and preparing a leak-free scikit-learn pipeline for classification — documented end-to-end in a Jupyter notebook.
+Querying a local SQLite hospital database with SQL, exploring patient data, identifying clinical trends, and preparing a leak-free scikit-learn pipeline for classification documented end-to-end in a Jupyter notebook.
 
 ## Project Files
 
 | File | Description |
 |---|---|
-| `hospital.db` | SQLite database — `Patients`, `Doctors`, `Admissions` tables, 51,208 rows each, joined via `PatientID` / `DoctorID` |
+| `hospital.db` | SQLite database  `Patients`, `Doctors`, `Admissions` tables, 51,208 rows each, joined via `PatientID` / `DoctorID` |
 | `hospital_analytics.ipynb` | Full notebook: SQL extraction → EDA → clinical trend analysis → feature engineering → ML pipeline → baseline models |
 
 ## Environment
@@ -24,19 +24,19 @@ Built from three raw CSV exports (`Patients.csv`, `Doctors.csv`, `Admissions.csv
 
 ## Pipeline
 
-1. **Connect & query (SQL)** — `sqlite3` connection, schema inspection (`PRAGMA table_info`), core join query across all three tables, aggregate query for condition prevalence.
-2. **Load into pandas** — `pd.read_sql_query` into a working dataframe.
-3. **Exploratory data analysis** — structural checks, derived `LengthOfStay` from admission/discharge dates, numeric distributions and outlier detection (`Age`, `BillingAmount`, `LengthOfStay`), categorical frequency counts, target class balance.
-4. **Clinical trend analysis** — correlation matrix on numeric features, bivariate breakdowns (billing by admission type/condition, length of stay by admission type, age by test result), crosstabs across categorical fields, chi-square independence tests.
-5. **Feature engineering** — dropped identifier and high-cardinality columns (`PatientID`, `AdmissionID`, `DoctorName`, `Hospital` [37,146 unique values], `Room_Number`, raw date columns superseded by `LengthOfStay`); split remaining features into numeric vs. categorical.
-6. **ML-ready pipeline** — `LabelEncoder` on target (`TestResults`), stratified `train_test_split`, `ColumnTransformer` (`StandardScaler` on numeric, `OneHotEncoder` on categorical, fit on train only to prevent leakage).
-7. **Baseline modeling** — `LogisticRegression` and `RandomForestClassifier` trained on the processed features.
+1. **Connect & query (SQL)** `sqlite3` connection, schema inspection (`PRAGMA table_info`), core join query across all three tables, aggregate query for condition prevalence.
+2. **Load into pandas** `pd.read_sql_query` into a working dataframe.
+3. **Exploratory data analysis** structural checks, derived `LengthOfStay` from admission/discharge dates, numeric distributions and outlier detection (`Age`, `BillingAmount`, `LengthOfStay`), categorical frequency counts, target class balance.
+4. **Clinical trend analysis** correlation matrix on numeric features, bivariate breakdowns (billing by admission type/condition, length of stay by admission type, age by test result), crosstabs across categorical fields, chi-square independence tests.
+5. **Feature engineering** dropped identifier and high-cardinality columns (`PatientID`, `AdmissionID`, `DoctorName`, `Hospital` [37,146 unique values], `Room_Number`, raw date columns superseded by `LengthOfStay`); split remaining features into numeric vs. categorical.
+6. **ML-ready pipeline** `LabelEncoder` on target (`TestResults`), stratified `train_test_split`, `ColumnTransformer` (`StandardScaler` on numeric, `OneHotEncoder` on categorical, fit on train only to prevent leakage).
+7. **Baseline modeling** `LogisticRegression` and `RandomForestClassifier` trained on the processed features.
 
 ## Key Findings
 
-- **No demographic/clinical association**: `MedicalCondition` and `TestResults` are statistically independent of `Gender`, `Blood_Type`, `AdmissionType`, and `InsuranceProvider` — near-uniform distribution across all categories, confirmed with chi-square tests.
+- **No demographic/clinical association**: `MedicalCondition` and `TestResults` are statistically independent of `Gender`, `Blood_Type`, `AdmissionType`, and `InsuranceProvider` near-uniform distribution across all categories, confirmed with chi-square tests.
 - **Baseline models confirm no signal**: Logistic Regression reached 34% accuracy predicting `TestResults` (3-class, balanced — chance level is ~33.3%). Random Forest was run as a non-linear check against the same result.
-- **Conclusion**: This is a synthetic dataset with independently/randomly assigned categorical fields. Near-chance model performance is the correct, expected outcome — it confirms the pipeline is leak-free and working correctly, not that the model is broken. The deliverable demonstrates correct SQL extraction, EDA methodology, and scikit-learn preprocessing practice on realistic (if clinically flat) healthcare data.
+- **Conclusion**: This is a synthetic dataset with independently/randomly assigned categorical fields. Near-chance model performance is the correct, expected outcome it confirms the pipeline is leak-free and working correctly, not that the model is broken. The deliverable demonstrates correct SQL extraction, EDA methodology, and scikit-learn preprocessing practice on realistic (if clinically flat) healthcare data.
 
 ## How to Run
 
